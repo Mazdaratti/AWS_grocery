@@ -1,6 +1,6 @@
 ## Requirements
 To make this app work make sure you have this installed on your computer:
-- Python
+- Python(use `pyenv` to install and manage compatible versions [3.12/3.11])
 - PostgreSQL
 - Node.js and npm
 - Git
@@ -55,6 +55,32 @@ Clone the Repository:
 
     git clone --branch version1 https://github.com/AlejandroRomanIbanez/AWS_grocery.git
     cd AWS_grocery
+
+## Install and Set Up Python Using pyenv
+Install pyenv ..> [GithubRepository](https://github.com/pyenv/pyenv-installer):
+
+## On macOS/Linux:
+
+Follow the instructions [here](https://github.com/pyenv/pyenv-installer) to install pyenv
+
+## On Windows:
+
+Use pyenv-win, you can find it [here](https://github.com/pyenv-win/pyenv-win), follow hte instructions to install it
+
+## Install Python on pyenv:
+
+Install Python 3.12.x or 3.11.x on pyenv:
+
+    pyenv install 3.12.1
+    pyenv local 3.12.1
+
+Check Python version now using:
+
+    python -v
+
+You should get an output with the version you install on pyenv now, and proceed if you have a compatible version
+
+## Continue with the project installation
 
 Go to the backend:
 
