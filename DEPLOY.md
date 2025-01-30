@@ -62,11 +62,9 @@ node -v
 npm -v
 ```
 ## Step 7 : Follow the README.md instructions to install the app(Omit build in EC2 and follow step 8)
-Follow the instruction of readme to install and set up everything like your did in local, skipping build there to save time and resources, and now doing it inside EC2
-
+Follow the instructions in the README to set up your app, but skip the build step on EC2. Instead, build the app locally and transfer the build files to EC2 to save time and resources.
 ## Step 8: Transfer Your App's Build Files (Optional)
-After follow the app steps, use scp to copy your frontend build files to your EC2 instance. This makes deployment quicker:
-
+After setting up the app, use scp to copy your locally built frontend files to your EC2 instance. This speeds up deployment:
 ```bash
 scp -i "/path/to/your-key.pem" -r /path/to/local/build ec2-user@your-ec2-public-ip:/path/to/ec2/directory/
 ```
@@ -82,7 +80,7 @@ Verify the files are transferred by using:
 ls /home/ec2-user/AWS_grocery/frontend/
 ```
 
-Step 8: Configure Security Groups for Flask (Port 5000)
+Configure Security Groups for Flask (Port 5000)
 To allow Flask to work on port 5000, configure inbound rules in your AWS security group:
 
 Navigate to Security > Security Groups > Inbound Rules.

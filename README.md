@@ -49,48 +49,58 @@ Installation
 Follow these steps to set up the application locally.
 Create .env files in the backend and frontend, and follow the .env.examples to know what is required
 
-## Backend
+## Clone repository
 
-Clone the Repository:
+Clone the repository:
 
     git clone --branch version1 https://github.com/AlejandroRomanIbanez/AWS_grocery.git
-    cd AWS_grocery
+    
 
-## Install and Set Up Python Using pyenv
-Install pyenv ..> [GithubRepository](https://github.com/pyenv/pyenv-installer):
+## Install pyenv and python (if you haven't yet)
 
-## On macOS/Linux:
+
+### On macOS/Linux:
 
 Follow the instructions [here](https://github.com/pyenv/pyenv-installer) to install pyenv
 
-## On Windows:
+### On Windows:
 
-Use pyenv-win, you can find it [here](https://github.com/pyenv-win/pyenv-win), follow hte instructions to install it
+Use pyenv-win, you can find it [here](https://github.com/pyenv-win/pyenv-win), follow the instructions to install it
 
-## Install Python on pyenv:
+### Install Python with `pyenv` (if you don't have it on your machine yet)
 
-Install Python 3.12.x or 3.11.x on pyenv:
+Install Python 3.12.x (or 3.11.x): 
 
     pyenv install 3.12.1
-    pyenv local 3.12.1
 
 Check Python version now using:
 
-    python -v
+    python3 --version
 
-You should get an output with the version you install on pyenv now, and proceed if you have a compatible version
+You should see the version you installed (e.g., `3.12.1`).
 
 ## Continue with the project installation
+Open the project in your preferred IDE (e.g., PyCharm).
 
-Go to the backend:
+Open the IDE terminal.
+
+Navigate to the backend folder:
 
     cd backend
 
-Create and Activate a Virtual Environment:
+Create a virtual environment: 
+
+    python3 -m venv venv
+
+Activate the virtual environment: 
+ - On macOS/Linux: 
 
 
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    source venv/bin/activate  
+- On Windows use
+
+
+    venv\Scripts\activate
 
 Install Requirements:
 
@@ -98,31 +108,55 @@ Install Requirements:
 
 Create an `.env` file for the backend:
 
-- On Windows:
-
-  - Use ni to create the `.env` file and notepad to fill the .env:
-
-        ni .env -Force
-        notepad .env
-
-- On Linux/macOS:
+- On macOS:
 
   - Use nano to create the `.env` file:
 
-        nano .env
+        touch .env
 
-Generate the JWT Secret Key and fill the .env file like in the .env.example:
+- On Windows:
+
+  - Use ni to create the `.env` file
+
+        ni .env -Force
+       
+  
+Generate the JWT Secret Key 
 - To generate a secure `JWT_SECRET_KEY`, run the following command:
 
       python -c "import secrets; print(secrets.token_hex(32))"
 
-      Example:
-        JWT_SECRET_KEY=094bb15924a8a63d82f612b978e8bc758d5c3f0330a41beefb36f45b587411d4
-- This key will be used to secure user sessions, don't use the key for the example
+Example:
+  `094bb15924a8a63d82f612b978e8bc758d5c3f0330a41beefb36f45b587411d4`
+- This key will be used to secure user sessions
+- Copy the generated key from your terminal
 
-- Fill the `FLASK_ENV` with development to work in a local environment:
-      
+Edit the .env file
+
+- On macOS:
+
+      nano .env
+
+  Paste your copied JWT Secret Key into the file like this
+`JWT_SECRET_KEY=094bb15924a8a63d82f612b978e8bc758d5c3f0330a41beefb36f45b587411d4`
+
+  Also paste enviroment variable for flask:
+
       FLASK_ENV=development
+  Exit and save.
+
+
+- On Windows:
+  
+      notepad .env
+
+  Paste your copied JWT Secret Key into the file like this
+`JWT_SECRET_KEY=094bb15924a8a63d82f612b978e8bc758d5c3f0330a41beefb36f45b587411d4`
+
+  Also paste enviroment variable for flask:
+
+      FLASK_ENV=development
+  Exit and save.
 
 
 ## Frontend
@@ -131,22 +165,9 @@ Navigate to the Frontend Directory:
 
     cd ../frontend
 
-Create the `.env` File for the Frontend:
+Create the `.env` File for the Frontend. Use same commands for creating and editing .env files as [above]((#create-an-env-file-for-the-backend))
 
-- Create a `.env` file in the frontend directory:
-- On Windows:
-  - Use ni to create the `.env` file and notepad to fill the .env:
-
-        ni .env -Force
-        notepad .env
-
-- On Linux/macOS:
-
-  - Use nano to create the `.env` file:
-
-        nano .env
-
-- Example content for the .env file:
+- Set a port for your backend server inside the .env file:
   
       REACT_APP_BACKEND_SERVER=http://localhost:5000
 
