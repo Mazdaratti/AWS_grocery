@@ -97,10 +97,10 @@ Once you’ve made the necessary changes, connect to your PostgreSQL RDS instanc
     psql -h <rds-endpoint> -U <username> -d <database>
     ```
 
-Replace the host, username, and database name with your own values.
+   Replace the host, username, and database name with your own values.
 
 2. Verify the schema has been created by Flask migrations.
----
+
 
 ### Step 6: Load Data into PostgreSQL
 
