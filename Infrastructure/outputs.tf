@@ -1,3 +1,8 @@
+output "ecr_registry_url" {
+  description = "The base ECR registry URL for Docker authentication."
+  value       = local.ecr_registry_url
+}
+
 output "vpc_id" {
   value = module.vpc.vpc_id
 }
@@ -48,6 +53,10 @@ output "iam_role_arn" {
   description = "The ARN of the IAM role."
 }
 
+output "ami_id" {
+  description = "The ID of the created AMI."
+  value       = module.ami_builder.ami_id
+}
 output "launch_template_id" {
   value       = module.ec2_launch_template.launch_template_id
   description = "The ID of the EC2 launch template."

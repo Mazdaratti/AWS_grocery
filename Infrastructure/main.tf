@@ -33,10 +33,26 @@ module "iam_role" {
   iam_instance_profile_name  = "EC2Profile"
 }
 
+module "ami_builder" {
+  source = "./modules/ami_builder"
+
+  base_ami_id               = "ami-06ee6255945a96aba" # Amazon Linux 2023 AMI
+  instance_type             = "t2.micro"
+  key_name                  = var.key_name
+  subnet_id                 = module.vpc.public_subnet_ids[0]
+  security_group_id         = module.security_groups.ec2_security_group_id
+  iam_instance_profile_name = module.iam_role.iam_instance_profile_name
+  private_key_path          = var.private_key_path
+  region                    = "eu-central-1"
+  ecr_registry_url          = local.ecr_registry_url
+  frontend_image            = aws_ecr_repository.repos["frontend"].repository_url
+  backend_image             = aws_ecr_repository.repos["backend"].repository_url
+}
+
 module "ec2_launch_template" {
   source                    = "./modules/ec2_launch_template"
   launch_template_name      = "grocery-launch-template"
-  ami_id                    = var.ami_id # Set your custom AMI ID in terraform.tfvars
+  ami_id                    = module.ami_builder.ami_id
   instance_type             = "t2.micro"
   iam_instance_profile_name = module.iam_role.iam_instance_profile_name
   security_group_id         = module.security_groups.ec2_security_group_id
@@ -47,9 +63,9 @@ module "ec2_launch_template" {
 module "asg" {
   source             = "./modules/asg"
   asg_name           = "grocery-asg"
-  desired_capacity   = 2 # adjust for desired capacity
+  desired_capacity   = 1 # adjust for desired capacity
   max_size           = 4 # adjust for desired max_size
-  min_size           = 1 # adjust for desired min_size
+  min_size           = 0 # adjust for desired min_size
   public_subnet_ids  = module.vpc.public_subnet_ids
   launch_template_id = module.ec2_launch_template.launch_template_id
   ec2_name           = "grocery-ec2"

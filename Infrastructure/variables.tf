@@ -69,10 +69,20 @@ variable "launch_template_name" {
   default     = "ec2-launch-template"
 }
 
-variable "ami_id" {
-  description = "AMI ID for EC2 instances."
+variable "base_ami_id" {
+  description = "The base AMI ID to use for the EC2 instance."
   type        = string
-  default = "ami-0c8db01b2e8e5298d" # Set you custom AMI ID in terraform.tfvar
+  default = "ami-0c8db01b2e8e5298d"
+}
+
+variable "key_name" {
+  description = "The key pair name for SSH access."
+  type        = string # Set your key name in terraform.tfvar
+}
+
+variable "private_key_path" {
+  description = "The path to the private key for SSH access."
+  type        = string # Set path to your key file in terraform.tfvar
 }
 
 variable "instance_type" {
