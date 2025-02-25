@@ -13,7 +13,8 @@ The infrastructure is designed for high availability, scalability, and security.
 
 ![Security_groups](https://github.com/user-attachments/assets/be4133e0-34ea-41e5-a27e-f03a5fbfc863)
 
-![Networking](https://github.com/user-attachments/assets/23155612-fcde-4177-9da8-01f89494089f)
+![Networking](https://github.com/user-attachments/assets/9ca0fbbb-1488-4dc5-b75b-a7f3b570a16c)
+
 
 ## Project Structure
 
