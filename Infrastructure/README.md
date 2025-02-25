@@ -7,11 +7,11 @@ The setup includes an auto-scalable EC2 environment running Dockerized applicati
 an Application Load Balancer for traffic distribution, and an S3 bucket for storing user avatars. 
 The infrastructure is designed for high availability, scalability, and security.
 
-![Diagram1](Infrastructure/Diagrams/Resources.png)
+![Diagram1]()
 
-![Diagram1](Infrastructure/Diagrams/Networking.png)
+![Diagram2]()
 
-![Diagram1](Infrastructure/Diagrams/Security_groups.png)
+![Diagram3]()
 
 ## Project Structure
 
