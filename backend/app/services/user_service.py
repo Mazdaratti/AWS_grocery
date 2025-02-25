@@ -53,12 +53,14 @@ s3_client = get_s3_client()
 def get_avatar_url(user):
     """
     Returns the avatar URL based on storage option and user's current avatar status.
+    Now returns API URLs for both S3 and local storage.
     """
     if USE_S3_STORAGE:
-        print(user.avatar)
         if user.avatar and user.avatar.startswith(f"https://{S3_BUCKET}.s3"):
-            return user.avatar
-        return DEFAULT_AVATAR_S3_URL
+            # Extract filename from S3 URL and return API endpoint
+            filename = user.avatar.split('/')[-1]
+            return f"/api/me/avatar/{filename}"
+        return f"/api/me/avatar/{DEFAULT_AVATAR}"
     else:
         if user.avatar:
             local_avatar_path = os.path.join(UPLOAD_FOLDER, user.avatar)
