@@ -31,7 +31,7 @@ variable "private_subnet_cidrs" {
 variable "allowed_ssh_ip" {
   description = "The IP address that is allowed to SSH into the EC2 instances"
   type        = string
-  default = "0.0.0.0/0" # Set your actual IP in terraform.tfvar
+  default     = "0.0.0.0/0" # Set your actual IP in terraform.tfvar
 }
 
 variable "alb_ingress_ports" {
@@ -72,17 +72,12 @@ variable "launch_template_name" {
 variable "base_ami_id" {
   description = "The base AMI ID to use for the EC2 instance."
   type        = string
-  default = "ami-0c8db01b2e8e5298d"
+  default     = "ami-0c8db01b2e8e5298d"
 }
 
 variable "key_name" {
   description = "The key pair name for SSH access."
   type        = string # Set your key name in terraform.tfvar
-}
-
-variable "private_key_path" {
-  description = "The path to the private key for SSH access."
-  type        = string # Set path to your key file in terraform.tfvar
 }
 
 variable "instance_type" {

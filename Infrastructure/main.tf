@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-central-1"
+  region  = "eu-central-1"
   profile = "default"
 }
 
@@ -20,17 +20,17 @@ module "vpc" {
 module "security_groups" {
   source = "./modules/security_groups"
 
-  vpc_id              = module.vpc.vpc_id
-  allowed_ssh_ip      = var.allowed_ssh_ip # Set your local IP in terraform.tfvars
-  alb_ingress_ports   = [80, 443]
-  ec2_ingress_ports   = [5000, 22]
-  rds_port            = 5432
+  vpc_id            = module.vpc.vpc_id
+  allowed_ssh_ip    = var.allowed_ssh_ip # Set your local IP in terraform.tfvars
+  alb_ingress_ports = [80, 443]
+  ec2_ingress_ports = [5000, 22]
+  rds_port          = 5432
 }
 
 module "iam_role" {
-  source                     = "./modules/iam_role"
-  iam_role_name              = "EC2Role"
-  iam_instance_profile_name  = "EC2Profile"
+  source                    = "./modules/iam_role"
+  iam_role_name             = "EC2Role"
+  iam_instance_profile_name = "EC2Profile"
 }
 
 module "ami_builder" {
@@ -38,13 +38,10 @@ module "ami_builder" {
 
   base_ami_id               = "ami-06ee6255945a96aba" # Amazon Linux 2023 AMI
   instance_type             = "t2.micro"
-  key_name                  = var.key_name
+  key_name                  = var.key_name # Set your key name in terraform.tfvars
   subnet_id                 = module.vpc.public_subnet_ids[0]
   security_group_id         = module.security_groups.ec2_security_group_id
   iam_instance_profile_name = module.iam_role.iam_instance_profile_name
-  private_key_path          = var.private_key_path
-  region                    = "eu-central-1"
-  ecr_registry_url          = local.ecr_registry_url
   frontend_image            = aws_ecr_repository.repos["frontend"].repository_url
   backend_image             = aws_ecr_repository.repos["backend"].repository_url
 }

@@ -1,6 +1,11 @@
-output "ecr_registry_url" {
+output "frontend_ecr_repository_url" {
   description = "The base ECR registry URL for Docker authentication."
-  value       = local.ecr_registry_url
+  value       = aws_ecr_repository.repos["frontend"].repository_url
+}
+
+output "backend_ecr_repository_url" {
+  description = "The base ECR registry URL for Docker authentication."
+  value       = aws_ecr_repository.repos["backend"].repository_url
 }
 
 output "vpc_id" {
@@ -24,17 +29,17 @@ output "db_subnet_group_name" {
 }
 
 output "alb_security_group_id" {
-  value = module.security_groups.alb_security_group_id
+  value       = module.security_groups.alb_security_group_id
   description = "The ID of the ALB security group."
 }
 
 output "ec2_security_group_id" {
-  value = module.security_groups.ec2_security_group_id
+  value       = module.security_groups.ec2_security_group_id
   description = "The ID of the EC2 security group."
 }
 
 output "rds_security_group_id" {
-  value = module.security_groups.rds_security_group_id
+  value       = module.security_groups.rds_security_group_id
   description = "The ID of the RDS security group."
 }
 
@@ -88,7 +93,7 @@ output "alb_dns_name" {
 }
 
 output "db_instance_endpoint" {
-  value = aws_db_instance.grocery-db.endpoint
+  value       = aws_db_instance.grocery-db.endpoint
   description = "The endpoint of the RDS instance."
 }
 
@@ -98,7 +103,7 @@ output "rds_id" {
 }
 
 output "s3_bucket_name" {
-  value = module.s3_bucket.s3_bucket_name
+  value       = module.s3_bucket.s3_bucket_name
   description = "The name of the S3 bucket for avatars."
 }
 

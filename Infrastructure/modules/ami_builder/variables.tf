@@ -28,21 +28,6 @@ variable "iam_instance_profile_name" {
   type        = string
 }
 
-variable "private_key_path" {
-  description = "The path to the private key for SSH access."
-  type        = string
-}
-
-variable "region" {
-  description = "The AWS region."
-  type        = string
-}
-
-variable "ecr_registry_url" {
-  description = "The ECR registry base URL for Docker login."
-  type        = string
-}
-
 variable "frontend_image" {
   description = "The ECR repository URL for the frontend image."
   type        = string
@@ -52,3 +37,4 @@ variable "backend_image" {
   description = "The ECR repository URL for the backend image."
   type        = string
 }
+
