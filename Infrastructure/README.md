@@ -7,6 +7,8 @@ The setup includes an auto-scalable EC2 environment running Dockerized applicati
 an Application Load Balancer for traffic distribution, and an S3 bucket for storing user avatars. 
 The infrastructure is designed for high availability, scalability, and security.
 
+## Project Diagram
+
 ![Diagram](https://github.com/user-attachments/assets/42779a4a-7536-4592-86eb-f022a7a9ee91)
 
 
@@ -54,7 +56,7 @@ The Terraform configuration is modularized as follows:
   - **Scaling Settings**(adjustable as needed):
     - Minimum: 1
     - Maximum: 4
-    - Desired: 2 
+    - Desired: 3 
 - **Docker Deployment**:
   - EC2 instances pull frontend and backend images from ECR.
   - Containers start automatically using `docker-compose.yml`.
