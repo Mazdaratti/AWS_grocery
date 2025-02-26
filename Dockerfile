@@ -8,12 +8,15 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
+# Copy the requirements file and install Python dependencies
 COPY backend/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the code
+# Copy the backend code (including the .env file)
 COPY backend /app/
+
+# Copy the built frontend files
+COPY frontend/build /app/../frontend/build
 
 # Expose the port Flask runs on
 EXPOSE 5000
