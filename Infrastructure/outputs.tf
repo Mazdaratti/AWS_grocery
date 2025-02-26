@@ -1,3 +1,11 @@
+output "ecr_repository_url_frontend" {
+  value = aws_ecr_repository.repos["frontend"]
+}
+
+output "ecr_repository_url_backend" {
+  value = aws_ecr_repository.repos["backend"]
+}
+
 output "vpc_id" {
   value = module.vpc.vpc_id
 }
