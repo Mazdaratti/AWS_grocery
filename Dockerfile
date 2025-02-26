@@ -8,6 +8,9 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory
 WORKDIR /app
 
+# Install system dependencies (if needed)
+#RUN apt-get update && apt-get install -y --no-install-recommends nginx && rm -rf /var/lib/apt/lists/*
+
 # Copy the requirements file and install Python dependencies
 COPY backend/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
