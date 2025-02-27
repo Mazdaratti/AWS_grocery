@@ -67,10 +67,10 @@ module "alb" {
   health_check_path     = "/health"
 }
 
-# DB RDS Instance
-resource "aws_db_instance" "grocery-db" {
+module "rds" {
+  source = "./modules/rds"
   identifier             = "grocery-db"
-  snapshot_identifier    = var.snapshot_id # Set the value of your snapshot ID in terraform.tfvars
+  snapshot_id            = var.snapshot_id # Set the value of your snapshot ID in terraform.tfvars
   instance_class         = "db.t3.micro"
   allocated_storage      = 20
   storage_type           = "gp2"
@@ -84,7 +84,6 @@ resource "aws_db_instance" "grocery-db" {
   db_subnet_group_name   = module.vpc.db_subnet_group_name
   skip_final_snapshot    = true
 }
-
 module "s3_bucket" {
   source                  = "./modules/s3_bucket"
   bucket_name             = var.bucket_name # Set your S3 bucket name in terraform.tfvars
