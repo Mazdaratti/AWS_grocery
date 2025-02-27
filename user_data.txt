@@ -47,15 +47,11 @@ cat <<EOF > /home/ec2-user/startup.sh
 # Navigate to the working directory
 cd /home/ec2-user
 
-# Stop and remove Docker Compose containers, networks, and volumes
-echo "Stopping and removing Docker Compose environment..."
-/usr/local/bin/docker-compose down -v
-
 # Authenticate with AWS ECR
 echo "Logging into AWS ECR..."
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin <your-account-id>.dkr.ecr.<your-region>.amazonaws.com
 
-# Start containers with the latest images
+# Start container with the latest image
 echo "Starting Docker container..."
 /usr/local/bin/docker-compose up -d --pull always
 

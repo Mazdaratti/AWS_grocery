@@ -5,7 +5,7 @@ provider "aws" {
 
 # ECR Repositories
 resource "aws_ecr_repository" "repos" {
-  for_each = toset(["frontend", "backend"])
+  for_each = toset(["frontend", "backend", "app"])
   name     = "aws_grocery-${each.key}"
 }
 
@@ -28,32 +28,9 @@ module "security_groups" {
 }
 
 module "iam_role" {
-  source                     = "./modules/iam_role"
-  iam_role_name              = "EC2Role"
-  iam_instance_profile_name  = "EC2Profile"
-}
-
-module "ec2_launch_template" {
-  source                    = "./modules/ec2_launch_template"
-  launch_template_name      = "grocery-launch-template"
-  ami_id                    = var.ami_id # Set your custom AMI ID in terraform.tfvars
-  instance_type             = "t2.micro"
-  iam_instance_profile_name = module.iam_role.iam_instance_profile_name
-  security_group_id         = module.security_groups.ec2_security_group_id
-  volume_size               = 20
-  volume_type               = "gp3"
-}
-
-module "asg" {
-  source             = "./modules/asg"
-  asg_name           = "grocery-asg"
-  desired_capacity   = 2 # adjust for desired capacity
-  max_size           = 4 # adjust for desired max_size
-  min_size           = 1 # adjust for desired min_size
-  public_subnet_ids  = module.vpc.public_subnet_ids
-  launch_template_id = module.ec2_launch_template.launch_template_id
-  ec2_name           = "grocery-ec2"
-  target_group_arn   = module.alb.target_group_arn
+  source                       = "./modules/iam_role"
+  ec2_iam_role_name            = "EC2Role"
+  iam_instance_profile_name    = "EC2Profile"
 }
 
 module "alb" {
@@ -67,10 +44,29 @@ module "alb" {
   health_check_path     = "/health"
 }
 
+module "ecs" {
+  source = "./modules/ecs"
+
+  cluster_name              = "grocery-ecs-cluster"
+  task_family               = "grocery-task"
+  container_name            = "grocery-app"
+  container_image           = "${aws_ecr_repository.repos["app"].repository_url}:latest"
+  container_port            = 5000
+  desired_count             = 2
+  target_group_arn          = module.alb.target_group_arn
+  ecs_security_group_id     = module.security_groups.ec2_security_group_id
+  subnet_ids                = module.vpc.public_subnet_ids
+  instance_type             = "t2.micro"
+  ami_id                    = "ami-0adc89df9108a6d24"
+  iam_instance_profile_name = module.iam_role.iam_instance_profile_name
+  key_name                  = var.key_name
+}
+
 # DB RDS Instance
-resource "aws_db_instance" "grocery-db" {
+module "rds" {
+  source = "./modules/rds"
   identifier             = "grocery-db"
-  snapshot_identifier    = var.snapshot_id # Set the value of your snapshot ID in terraform.tfvars
+  snapshot_id            = var.snapshot_id # Set the value of your snapshot ID in terraform.tfvars
   instance_class         = "db.t3.micro"
   allocated_storage      = 20
   storage_type           = "gp2"

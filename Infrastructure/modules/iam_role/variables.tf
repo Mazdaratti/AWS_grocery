@@ -1,4 +1,4 @@
-variable "iam_role_name" {
+variable "ec2_iam_role_name" {
   description = "The name of the IAM role for EC2"
   type        = string
 }

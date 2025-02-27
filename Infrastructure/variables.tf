@@ -51,7 +51,7 @@ variable "rds_port" {
   default = 5432
 }
 
-variable "iam_role_name" {
+variable "ec2_iam_role_name" {
   description = "The name of the IAM role for EC2"
   type        = string
   default     = "EC2Role"
@@ -63,64 +63,16 @@ variable "iam_instance_profile_name" {
   default     = "ec2-profile"
 }
 
-variable "launch_template_name" {
-  description = "The name of the EC2 launch template"
-  type        = string
-  default     = "ec2-launch-template"
-}
-
-variable "ami_id" {
-  description = "AMI ID for EC2 instances."
-  type        = string
-  default = "ami-0c8db01b2e8e5298d" # Set you custom AMI ID in terraform.tfvar
-}
-
 variable "instance_type" {
   description = "Instance type for EC2."
   type        = string
   default     = "t2.micro"
 }
 
-variable "volume_size" {
-  description = "Size of the EBS volume"
-  type        = number
-  default     = 20
-}
-
-variable "volume_type" {
-  description = "Type of the EBS volume"
+variable "ami_id" {
+  description = "AMI ID for EC2 instances." # Use an ECS-optimized AMI
   type        = string
-  default     = "gp3"
-}
-
-variable "asg_name" {
-  description = "Name of the Auto Scaling Group"
-  type        = string
-  default     = "asg"
-}
-
-variable "desired_capacity" {
-  description = "Desired number of instances"
-  type        = number
-  default     = 2
-}
-
-variable "max_size" {
-  description = "Maximum number of instances"
-  type        = number
-  default     = 4
-}
-
-variable "min_size" {
-  description = "Minimum number of instances"
-  type        = number
-  default     = 1
-}
-
-variable "ec2_name" {
-  description = "Tag name for instances"
-  type        = string
-  default     = "ec2"
+  default     = "ami-06ee6255945a96aba"
 }
 
 variable "alb_name" {
@@ -145,6 +97,11 @@ variable "health_check_path" {
   description = "Health check path for the target group"
   type        = string
   default     = "/health"
+}
+
+variable "key_name" {
+  description = "Key pair name for SSH access"
+  type        = string
 }
 
 variable "snapshot_id" {
