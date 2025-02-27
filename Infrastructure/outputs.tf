@@ -1,43 +1,50 @@
 output "ecr_repository_url_frontend" {
-  value = aws_ecr_repository.repos["frontend"]
+  value       = aws_ecr_repository.repos["frontend"]
+  description = "URL of the frontend ECR repository."
 }
 
 output "ecr_repository_url_backend" {
-  value = aws_ecr_repository.repos["backend"]
+  value       = aws_ecr_repository.repos["backend"]
+  description = "URL of the backend ECR repository."
 }
 
 output "vpc_id" {
-  value = module.vpc.vpc_id
+  value       = module.vpc.vpc_id
+  description = "The ID of the created VPC."
 }
 
 output "public_subnet_ids" {
-  value = module.vpc.public_subnet_ids
+  value       = module.vpc.public_subnet_ids
+  description = "List of public subnet IDs."
 }
 
 output "private_subnet_ids" {
-  value = module.vpc.private_subnet_ids
+  value       = module.vpc.private_subnet_ids
+  description = "List of private subnet IDs."
 }
 
 output "internet_gateway_id" {
-  value = module.vpc.internet_gateway_id
+  value       = module.vpc.internet_gateway_id
+  description = "The ID of the Internet Gateway."
 }
 
 output "db_subnet_group_name" {
-  value = module.vpc.db_subnet_group_name
+  value       = module.vpc.db_subnet_group_name
+  description = "The name of the database subnet group."
 }
 
 output "alb_security_group_id" {
-  value = module.security_groups.alb_security_group_id
+  value       = module.security_groups.alb_security_group_id
   description = "The ID of the ALB security group."
 }
 
 output "ec2_security_group_id" {
-  value = module.security_groups.ec2_security_group_id
+  value       = module.security_groups.ec2_security_group_id
   description = "The ID of the EC2 security group."
 }
 
 output "rds_security_group_id" {
-  value = module.security_groups.rds_security_group_id
+  value       = module.security_groups.rds_security_group_id
   description = "The ID of the RDS security group."
 }
 
@@ -68,45 +75,45 @@ output "launch_template_name" {
 
 output "asg_id" {
   value       = module.asg.asg_id
-  description = "ID of the Auto Scaling Group"
+  description = "The ID of the Auto Scaling Group."
 }
 
 output "alb_arn" {
   value       = module.alb.alb_arn
-  description = "ARN of the ALB"
+  description = "The ARN of the Application Load Balancer."
 }
 
 output "target_group_arn" {
   value       = module.alb.target_group_arn
-  description = "ARN of the Target Group"
+  description = "The ARN of the Target Group for ALB."
 }
 
 output "alb_dns_name" {
   value       = module.alb.alb_dns_name
-  description = "DNS name of the ALB"
+  description = "The DNS name of the Application Load Balancer."
 }
 
 output "db_instance_endpoint" {
-  value = aws_db_instance.grocery-db.endpoint
+  value       = module.rds.rds_endpoint
   description = "The endpoint of the RDS instance."
 }
 
 output "rds_id" {
-  description = "The ID of the RDS DB instance"
-  value       = aws_db_instance.grocery-db.id
+  value       = module.rds.rds_id
+  description = "The ID of the RDS DB instance."
 }
 
 output "s3_bucket_name" {
-  value = module.s3_bucket.s3_bucket_name
+  value       = module.s3_bucket.s3_bucket_name
   description = "The name of the S3 bucket for avatars."
 }
 
 output "s3_bucket_id" {
-  description = "ID of the created S3 bucket"
   value       = module.s3_bucket.s3_bucket_id
+  description = "The ID of the created S3 bucket."
 }
 
 output "s3_bucket_arn" {
-  description = "ARN of the created S3 bucket"
   value       = module.s3_bucket.s3_bucket_arn
+  description = "The ARN of the created S3 bucket."
 }
