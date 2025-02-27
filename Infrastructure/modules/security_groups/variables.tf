@@ -19,5 +19,7 @@ variable "ec2_ingress_ports" {
 }
 
 variable "rds_port" {
-  type    = number
+  description = "The port number for the PostgreSQL RDS instance"
+  type        = number
+  default     = 5432
 }

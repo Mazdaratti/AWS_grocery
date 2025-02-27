@@ -47,8 +47,9 @@ variable "ec2_ingress_ports" {
 }
 
 variable "rds_port" {
-  type    = number
-  default = 5432
+  description = "The port number for the PostgreSQL RDS instance"
+  type        = number
+  default     = 5432
 }
 
 variable "iam_role_name" {
@@ -72,7 +73,7 @@ variable "launch_template_name" {
 variable "ami_id" {
   description = "AMI ID for EC2 instances."
   type        = string
-  default = "ami-0c8db01b2e8e5298d" # Set you custom AMI ID in terraform.tfvar
+  default = "ami-06ee6255945a96aba" # Set you custom AMI ID in terraform.tfvar
 }
 
 variable "instance_type" {
