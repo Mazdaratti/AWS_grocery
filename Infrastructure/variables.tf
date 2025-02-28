@@ -76,6 +76,11 @@ variable "ami_id" {
   default = "ami-06ee6255945a96aba" # Set you custom AMI ID in terraform.tfvar
 }
 
+variable "key_name" {
+  description = "The key pair name for SSH access"
+  type        = string
+}
+
 variable "instance_type" {
   description = "Instance type for EC2."
   type        = string

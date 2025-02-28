@@ -5,7 +5,7 @@ provider "aws" {
 
 # ECR Repositories
 resource "aws_ecr_repository" "repos" {
-  for_each = toset(["frontend", "backend"])
+  for_each = toset(["frontend", "backend", "app"])
   name     = "aws_grocery-${each.key}"
 }
 
@@ -38,6 +38,7 @@ module "ec2_launch_template" {
   launch_template_name      = "grocery-launch-template"
   ami_id                    = var.ami_id # Set your custom AMI ID in terraform.tfvars
   instance_type             = "t2.micro"
+  key_name                  = var.key_name # Set your Key Name in terraform.tfvars
   iam_instance_profile_name = module.iam_role.iam_instance_profile_name
   security_group_id         = module.security_groups.ec2_security_group_id
   volume_size               = 20

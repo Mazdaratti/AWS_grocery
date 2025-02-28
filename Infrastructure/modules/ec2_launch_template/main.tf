@@ -2,10 +2,7 @@ resource "aws_launch_template" "grocery" {
   name          = var.launch_template_name
   image_id      = var.ami_id
   instance_type = var.instance_type
-
-  iam_instance_profile {
-    name = var.iam_instance_profile_name
-  }
+  key_name      = var.key_name
 
   network_interfaces {
     associate_public_ip_address = true
@@ -19,5 +16,8 @@ resource "aws_launch_template" "grocery" {
       volume_type           = var.volume_type
       delete_on_termination = true
     }
+  }
+  iam_instance_profile {
+    name = var.iam_instance_profile_name
   }
 }
