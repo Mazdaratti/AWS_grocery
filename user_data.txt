@@ -23,6 +23,67 @@ fi
 # Add ec2-user to the Docker group
 sudo usermod -aG docker ec2-user
 
+# Install and configure the CloudWatch Logs Agent
+sudo yum install -y amazon-cloudwatch-agent
+
+# Configure the CloudWatch Agent
+cat <<EOF > /opt/aws/amazon-cloudwatch-agent/bin/config.json
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/lib/docker/containers/**/*-json.log",
+            "log_group_name": "/myapp/docker-logs",
+            "log_stream_name": "{instance_id}",
+            "timezone": "UTC"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "metrics_collected": {
+      "cpu": {
+        "measurement": [
+          "cpu_usage_idle",
+          "cpu_usage_user",
+          "cpu_usage_system"
+        ],
+        "resources": [
+          "*"
+        ],
+        "totalcpu": true
+      },
+      "disk": {
+        "measurement": [
+          "used_percent",
+          "inodes_free"
+        ],
+        "resources": [
+          "/"
+        ]
+      },
+      "mem": {
+        "measurement": [
+          "mem_used_percent"
+        ]
+      },
+      "net": {
+        "measurement": [
+          "bytes_sent",
+          "bytes_recv"
+        ]
+      }
+    }
+  }
+}
+EOF
+
+# Start the CloudWatch Agent
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+
 # Create and set permissions for docker-compose.yml
 cat <<EOF > /home/ec2-user/docker-compose.yml
 services:

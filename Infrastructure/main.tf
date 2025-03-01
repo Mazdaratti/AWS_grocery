@@ -48,7 +48,7 @@ module "ec2_launch_template" {
 module "asg" {
   source             = "./modules/asg"
   asg_name           = "grocery-asg"
-  desired_capacity   = 2 # adjust for desired capacity
+  desired_capacity   = 1 # adjust for desired capacity
   max_size           = 4 # adjust for desired max_size
   min_size           = 1 # adjust for desired min_size
   public_subnet_ids  = module.vpc.public_subnet_ids
@@ -100,4 +100,7 @@ module "s3_bucket" {
   avatar_path             = "../backend/avatar/user_default.png"
 }
 
-
+module "cloudwatch_logging" {
+  source = "./modules/cloudwatch_logging"
+  ec2_role_name = module.iam_role.iam_role_name
+}

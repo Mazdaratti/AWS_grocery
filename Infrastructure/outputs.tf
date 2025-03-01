@@ -1,10 +1,10 @@
 output "ecr_repository_url_frontend" {
-  value       = aws_ecr_repository.repos["frontend"]
+  value       = aws_ecr_repository.repos["frontend"].repository_url
   description = "URL of the frontend ECR repository."
 }
 
 output "ecr_repository_url_backend" {
-  value       = aws_ecr_repository.repos["backend"]
+  value       = aws_ecr_repository.repos["backend"].repository_url
   description = "URL of the backend ECR repository."
 }
 
@@ -116,4 +116,9 @@ output "s3_bucket_id" {
 output "s3_bucket_arn" {
   value       = module.s3_bucket.s3_bucket_arn
   description = "The ARN of the created S3 bucket."
+}
+
+output "log_group_name" {
+  description = "Name of the CloudWatch Log Group"
+  value       = module.cloudwatch_logging.log_group_name
 }
