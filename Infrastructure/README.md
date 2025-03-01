@@ -20,10 +20,11 @@ The infrastructure is designed for high availability, scalability, and security.
 The Terraform configuration is modularized as follows:
 
 ```
-/terraform
+/infrastructure
 │── /modules
 │   ├── alb
 │   ├── asg
+│   ├── cloudwatch_logging
 │   ├── ec2_launch_template
 │   ├── iam_role
 │   ├── rds
@@ -84,7 +85,7 @@ The Terraform configuration is modularized as follows:
   - Deployed in private subnets for security.
   - Security Group allows access only from EC2 instances.
 
-### 6. **Storage (S3 Bucket)**
+### 7. **Storage (S3 Bucket)**
 - **Purpose**: Stores user avatar images.
 - Public `avatars/` folder for GET and PUT requests.
 - **Configuration**:
@@ -97,11 +98,19 @@ The Terraform configuration is modularized as follows:
   - **CORS**: Configured for frontend access.
   - **Preloaded Avatar**: `user_default.png` is uploaded.
 
-### 7. **IAM Roles & Policies**
+### 8. **IAM Roles & Policies**
 - **IAM Role for EC2**:
   - Allows EC2 instances to pull images from **ECR**.
   - Grants **full access to S3** for avatar storage.
 - **IAM Instance Profile**: Assigned to EC2 instances.
+
+### 9. **CloudWatch Logging and Monitoring**
+  - CloudWatch Log Group: /myapp/docker-logs
+  - Log Retention: 30 days.
+  - Log Collection:
+    - Collects logs from /var/log/docker on EC2 instances.
+    - Logs are streamed to CloudWatch for centralized monitoring.
+  - IAM Role: Attaches the CloudWatchAgentServerPolicy to the EC2 role.
 
 ## Terraform Modules
 This infrastructure is modularized for reusability and maintainability:
@@ -111,39 +120,43 @@ This infrastructure is modularized for reusability and maintainability:
 - Configures a **target group** for EC2 instances.
 
 ### 2. `asg`
-- Configures the Auto Scaling Group (ASG) with:
+- Configures the **Auto Scaling Group (ASG)** with:
   - Desired, min, and max instance counts.
   - Public subnet IDs for instance placement.
-  - Load balancer target group attachment.
+  - **Load balancer target group** attachment.
+
+### 3. `cloudwatch_logging`
+  - Creates a **CloudWatch Log Group** for application logs.
+  - Attaches the **CloudWatchAgentServerPolicy** to the EC2 IAM role.
 
 ### 3. `ec2_launch_template`
-- Defines the EC2 launch template with:
-  - Custom AMI ID.
+- Defines the **EC2 Launch Template** with:
+  - Custom **AMI ID**.
   - Instance type (`t2.micro`).
-  - IAM instance profile.
-  - Security Group.
+  - **IAM** instance **profile**.
+  - **Security Group**.
   - Volume configuration (20GB `gp3`).
 
 ### 4. `iam_role`
-- Creates an IAM role for EC2 instances.
+- Creates an **IAM Role** for EC2 instances.
 - Outputs IAM role and instance profile names.
 
 ### 5. `rds`
-- Provisions an Amazon RDS PostgreSQL instance.
+- Provisions an Amazon **RDS PostgreSQL** instance.
 - Configures security groups and backup settings.
 - Uses a snapshot for database restoration.
-- Outputs RDS Endpoint.
+- Outputs **RDS Endpoint**.
 
 ### 6. `s3_bucket`
-- Creates an S3 bucket for storing user avatars.
+- Creates an **S3 Bucket** for storing user avatars.
 - Configures lifecycle rules and permissions.
 
 ### 7. `security_groups`
-- Defines security groups for ALB, EC2, and RDS.
-- Outputs security group IDs for use in other modules.
+- Defines **Security Groups** for ALB, EC2, and RDS.
+- Outputs security group **IDs** for use in other modules.
 
 ### 8. `vpc`
-- Provisions the VPC, subnets, route tables, and internet gateway.
+- Provisions the **VPC**, **Subnets**, **Route Tables**, and **Internet Gateway**.
 - Outputs **VPC ID**, **Public Subnet IDs**, and **Private Subnet IDs**.
 
 ## Variables
@@ -152,6 +165,7 @@ The following variables should be configured in `terraform.tfvars`:
 allowed_ssh_ip     = "YOUR_IP_ADDRESS"
 ami_id             = "YOUR_CUSTOM_AMI_ID"
 snapshot_id        = "YOUR_RDS_SNAPSHOT_ID"
+key_name           = "YOUR KEY PAIR NAME"
 bucket_name        = "YOUR_S3_BUCKET_NAME"
 ```
 ## Outputs
@@ -160,15 +174,17 @@ After deployment, Terraform provides the following outputs:
 - **ALB DNS Name**
 - **ALB Security Group ID**
 - **Auto Scaling Group ID**
-- **RDS Instance Endpoint**
+- **DB Instance Endpoint**
 - **DB Subnet Group Name**
 - **EC2 Security Group ID**
+- **ECR Repository URL**
 - **IAM Instance Profile Name**
 - **IAM Role ARN**
 - **IAM Role Name**
 - **Internet Gateway ID**
 - **Launch Template ID**
 - **Launch Template Name**
+- **Log Group Name**
 - **Private Subnet IDs**
 - **Public Subnet IDs**
 - **RDS ID**
@@ -203,9 +219,50 @@ After deployment, Terraform provides the following outputs:
   ```sh
   terraform destroy
   ```
+## Troubleshooting
+
+### Issue: Terraform Plan Fails
+- **Cause**: Missing or incorrect variables in `terraform.tfvars`.
+- **Solution**: Ensure all required variables are set in `terraform.tfvars`.
+
+### Issue: EC2 Instances Not Starting
+- **Cause**: Incorrect AMI ID or IAM role permissions.
+- **Solution**: Verify the AMI ID and ensure the IAM role has the necessary permissions.
+
+### Issue: CloudWatch Logs Not Appearing
+- **Cause**: CloudWatch Logs Agent not installed or configured correctly.
+- **Solution**: Check the EC2 instance logs and ensure the CloudWatch Logs Agent is running.
+
+## FAQ
+
+### Q: How do I change the instance type?
+A: Update the `instance_type` variable in `terraform.tfvars`.
+
+### Q: How do I access the RDS database?
+A: Use the **RDS Endpoint** output to connect to the database from an EC2 instance.
+
+### Q: How do I extend the infrastructure?
+A: Add new modules or modify existing ones in the `modules` directory.
+
+## Glossary
+
+- **VPC**: Virtual Private Cloud.
+- **ALB**: Application Load Balancer.
+- **ASG**: Auto Scaling Group.
+- **ECR**: Elastic Container Registry.
+- **RDS**: Relational Database Service.
+- **IAM**: Identity and Access Management.
+
+## Future Enhancements
+
+- Implement **CI/CD pipelines** for automated deployments.
+- Add **monitoring and alerting** using CloudWatch Alarms.
+- Integrate **AWS Lambda** for serverless tasks.
+
 
 ## Conclusion
 This modular Terraform setup ensures a scalable and secure AWS infrastructure for a grocery web application. 
 Each module can be reused and modified independently, making it easy to maintain and extend the architecture as needed.
+The addition of CloudWatch Logging and Monitoring provides centralized logging for easier debugging and monitoring.
 🚀
 
