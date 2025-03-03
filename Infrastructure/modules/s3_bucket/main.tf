@@ -37,31 +37,28 @@ resource "aws_s3_bucket_public_access_block" "grocery_s3_block" {
 
 resource "aws_s3_bucket_policy" "avatars_policy" {
   bucket = aws_s3_bucket.grocery_s3.id
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": ["s3:GetObject", "s3:PutObject"],
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.grocery_s3.bucket}/${var.prefix}*"
-    }
-  ]
-}
-POLICY
-  depends_on = [aws_s3_bucket_public_access_block.grocery_s3_block]
-}
-
-resource "aws_s3_bucket_cors_configuration" "avatars_cors" {
-  bucket = aws_s3_bucket.grocery_s3.id
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET", "POST", "PUT"]
-    allowed_origins = ["*"]
-    expose_headers  = ["ETag"]
-    max_age_seconds = 3000
-  }
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AllowEC2Access"
+        Effect    = "Allow"
+        Principal = {
+          AWS = var.iam_role_arn # Allow the EC2 role
+        }
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "${aws_s3_bucket.grocery_s3.arn}/${var.prefix}*",
+          aws_s3_bucket.grocery_s3.arn
+        ]
+      }
+    ]
+  })
 }
 
 resource "aws_s3_object" "avatar_image" {
