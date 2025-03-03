@@ -17,7 +17,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "grocery_s3_lifecycle" {
     status = var.lifecycle_status
 
     filter {
-      prefix = var.prefix
+      prefix = var.avatar_prefix
     }
 
     expiration {
@@ -45,7 +45,7 @@ resource "aws_s3_bucket_policy" "avatars_policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": ["s3:GetObject", "s3:PutObject"],
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.grocery_s3.bucket}/${var.prefix}*"
+      "Resource": "arn:aws:s3:::${aws_s3_bucket.grocery_s3.bucket}/${var.avatar_prefix}*"
     }
   ]
 }
@@ -66,6 +66,6 @@ resource "aws_s3_bucket_cors_configuration" "avatars_cors" {
 
 resource "aws_s3_object" "avatar_image" {
   bucket = aws_s3_bucket.grocery_s3.id
-  key    = "${var.prefix}${var.avatar_filename}"
+  key    = "${var.avatar_prefix}${var.avatar_filename}"
   source = var.avatar_path
 }

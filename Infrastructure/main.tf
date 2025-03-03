@@ -108,7 +108,7 @@ module "s3_bucket" {
   block_public_policy     = false
   ignore_public_acls      = false
   restrict_public_buckets = false
-  prefix                  = "avatars/"
+  avatar_prefix           = "avatars/"
   avatar_filename         = "user_default.png"
   avatar_path             = "../backend/avatar/user_default.png"
 }
