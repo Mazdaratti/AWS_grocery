@@ -18,16 +18,40 @@ resource "aws_iam_role" "ec2_role" {
   EOF
 }
 
+resource "aws_iam_policy" "ec2_s3_access_policy" {
+  name        = "ec2-s3-access-policy"
+  description = "Allows EC2 to access specific folders in S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::my-bucket/avatar/*",
+          "arn:aws:s3:::my-bucket" # Required for ListBucket
+        ]
+      }
+    ]
+  })
+}
+
+# Attach EC2-S3-Access-Policy
+resource "aws_iam_role_policy_attachment" "ec2_s3_access_attachment" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.ec2_s3_access_policy.arn
+}
+
 # Attach AmazonEC2ContainerRegistryPullOnly Policy
 resource "aws_iam_role_policy_attachment" "ecr_pull" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
-}
-
-# Attach AmazonS3FullAccess Policy
-resource "aws_iam_role_policy_attachment" "s3_full_access" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 # IAM Instance Profile (Required for EC2 to Use the Role)
