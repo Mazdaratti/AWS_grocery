@@ -48,7 +48,7 @@ module "ec2_launch_template" {
 module "asg" {
   source             = "./modules/asg"
   asg_name           = "grocery-asg"
-  desired_capacity   = 1 # adjust for desired capacity
+  desired_capacity   = 2 # adjust for desired capacity
   max_size           = 4 # adjust for desired max_size
   min_size           = 1 # adjust for desired min_size
   public_subnet_ids  = module.vpc.public_subnet_ids
@@ -91,10 +91,11 @@ module "s3_bucket" {
   versioning_status       = "Disabled"
   lifecycle_status        = "Disabled"
   expiration_days         = 30
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  iam_role_arn            = module.iam_role.iam_role_arn
   avatar_prefix           = "avatars/"
   avatar_filename         = "user_default.png"
   avatar_path             = "../backend/avatar/user_default.png"

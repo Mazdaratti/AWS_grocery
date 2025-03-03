@@ -38,6 +38,11 @@ variable "restrict_public_buckets" {
   type        = bool
 }
 
+variable "iam_role_arn" {
+  description = "The ARN of the IAM role for the EC2 instance"
+  type        = string
+}
+
 variable "avatar_prefix" {
   description = "The prefix for the avatars storage path"
   type        = string
