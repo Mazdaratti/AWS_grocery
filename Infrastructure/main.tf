@@ -91,10 +91,11 @@ module "s3_bucket" {
   versioning_status       = "Disabled"
   lifecycle_status        = "Disabled"
   expiration_days         = 30
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+  iam_role_arn            = module.iam_role.iam_role_arn
   prefix                  = "avatars/"
   avatar_filename         = "user_default.png"
   avatar_path             = "../backend/avatar/user_default.png"
