@@ -205,6 +205,7 @@ variable "restrict_public_buckets" {
   type        = bool
   default     = false
 }
+
 variable "avatar_prefix" {
   description = "The prefix for the avatars storage path"
   type        = string
