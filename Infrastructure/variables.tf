@@ -206,7 +206,7 @@ variable "restrict_public_buckets" {
   default     = false
 }
 
-variable "prefix" {
+variable "avatar_prefix" {
   description = "The prefix for the avatars storage path"
   type        = string
   default     = "avatars/"

@@ -43,7 +43,7 @@ variable "iam_role_arn" {
   type        = string
 }
 
-variable "prefix" {
+variable "avatar_prefix" {
   description = "The prefix for the avatars storage path"
   type        = string
 }
