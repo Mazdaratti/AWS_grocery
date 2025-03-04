@@ -101,4 +101,7 @@ module "s3_bucket" {
   avatar_path             = "../backend/avatar/user_default.png"
 }
 
-
+module "cloudwatch_logging" {
+  source = "./modules/cloudwatch_logging"
+  ec2_role_name = module.iam_role.iam_role_name
+}
