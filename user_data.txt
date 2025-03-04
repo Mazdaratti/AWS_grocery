@@ -88,7 +88,7 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-c
 cat <<EOF > /home/ec2-user/docker-compose.yml
 services:
   frontend:
-    image: 225989349529.dkr.ecr.eu-central-1.amazonaws.com/aws_grocery-frontend:latest
+    image: ${ecr_repository_url_frontend}:latest
     container_name: frontend
     networks:
       - app-network
@@ -98,7 +98,7 @@ services:
       sh -c "touch /app/build/BUILD_COMPLETE"
 
   backend:
-    image: 225989349529.dkr.ecr.eu-central-1.amazonaws.com/aws_grocery-backend:latest
+    image: ${ecr_repository_url_backend}:latest
     container_name: backend
     ports:
       - "5000:5000"
@@ -136,7 +136,7 @@ echo "Stopping and removing Docker Compose environment..."
 
 # Authenticate with AWS ECR
 echo "Logging into AWS ECR..."
-aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 225989349529.dkr.ecr.eu-central-1.amazonaws.com
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.${region}.amazonaws.com
 
 # Start containers with the latest images
 echo "Starting Docker containers..."
