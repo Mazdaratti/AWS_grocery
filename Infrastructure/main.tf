@@ -96,7 +96,7 @@ module "s3_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
   iam_role_arn            = module.iam_role.iam_role_arn
-  avatar_prefix                  = "avatars/"
+  avatar_prefix           = "avatars/"
   avatar_filename         = "user_default.png"
   avatar_path             = "../backend/avatar/user_default.png"
 }
