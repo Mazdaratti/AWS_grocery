@@ -18,11 +18,11 @@ resource "aws_iam_role" "ec2_role" {
   EOF
 }
 
-# Attach AmazonEC2ContainerRegistryPullOnly Policy
-resource "aws_iam_role_policy_attachment" "ecr_pull" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
-}
+# Attach AmazonEC2ContainerRegistryPullOnly Policy NOT NEEDED USING ECS Agent
+#resource "aws_iam_role_policy_attachment" "ecr_pull" {
+  #role       = aws_iam_role.ec2_role.name
+  #policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+#}
 
 # Attach AmazonS3FullAccess Policy
 resource "aws_iam_role_policy_attachment" "s3_full_access" {
@@ -60,6 +60,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# Custom Policy for ECS Container Instances
 resource "aws_iam_policy" "ecs_container_instance_policy" {
   name        = "ECSContainerInstancePolicy"
   description = "Policy to allow ECS container instance actions"
@@ -93,6 +94,7 @@ resource "aws_iam_policy" "ecs_container_instance_policy" {
   })
 }
 
+# Attach Custom ECS Container Instance Policy to EC2 Role
 resource "aws_iam_role_policy_attachment" "ecs_container_instance_policy_attachment" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.ecs_container_instance_policy.arn
