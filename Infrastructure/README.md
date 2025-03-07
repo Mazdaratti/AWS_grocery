@@ -256,8 +256,7 @@ A: Add new modules or modify existing ones in the `modules` directory.
 ## Future Enhancements
 
 - Implement **CI/CD pipelines** for automated deployments.
-- Add **monitoring and alerting** using CloudWatch Alarms.
-- Integrate **AWS Lambda** for serverless tasks.
+- Integrate **AWS Lambda** for migration of local database to rds.
 
 
 ## Conclusion
