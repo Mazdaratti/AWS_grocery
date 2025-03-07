@@ -8,16 +8,16 @@ resource "aws_ecs_task_definition" "task" {
   family                   = var.task_family
   network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = "256"  # Task-level CPU (25% of 1 vCPU)
+  memory                   = "512"  # Task-level memory (50% of 1 GB)
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
       name      = var.container_name
       image     = var.container_image
-      cpu       = 256
-      memory    = 512
+      cpu       = 256 # Container-level CPU (matches task-level)
+      memory    = 512 # Container-level memory (matches task-level)
       essential = true
       portMappings = [
         {
@@ -36,6 +36,10 @@ resource "aws_ecs_service" "service" {
   task_definition = aws_ecs_task_definition.task.arn
   desired_count   = var.desired_count
   launch_type     = "EC2"
+
+  placement_constraints {
+    type = "distinctInstance"
+  }
 
   load_balancer {
     target_group_arn = var.target_group_arn
@@ -126,6 +130,31 @@ resource "aws_autoscaling_group" "ecs_asg" {
     key                 = "Name"
     value               = "${var.task_family}-ecs-instance"
     propagate_at_launch = true
+  }
+}
+
+resource "aws_autoscaling_policy" "ecs_scaling_policy" {
+  name                   = "${var.task_family}-scaling-policy"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.ecs_asg.name
+}
+
+resource "aws_cloudwatch_metric_alarm" "ecs_cpu_alarm" {
+  alarm_name                = "${var.task_family}-cpu-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = 2
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/EC2"
+  period                    = 300
+  statistic                 = "Average"
+  threshold                 = 70
+  alarm_actions             = [aws_autoscaling_policy.ecs_scaling_policy.arn]
+
+  dimensions = {
+    ClusterName = aws_ecs_cluster.cluster.name
+    ServiceName = aws_ecs_service.service.name
   }
 }
 
