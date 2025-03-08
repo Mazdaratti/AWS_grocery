@@ -57,7 +57,7 @@ module "ecs" {
   ecs_security_group_id     = module.security_groups.ec2_security_group_id
   subnet_ids                = module.vpc.public_subnet_ids
   instance_type             = "t2.micro"
-  ami_id                    = "ami-0adc89df9108a6d24"
+  ami_id                    = "ami-0801a63f0471e5ad8" # ECS/Docker optimized Linux 2023
   iam_instance_profile_name = module.iam_role.iam_instance_profile_name
   key_name                  = var.key_name
 }
